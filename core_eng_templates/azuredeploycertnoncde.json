@@ -16,7 +16,8 @@
         }
     },
     "variables": {
-        "subnetRef" : "[resourceId('Microsoft.Network/virtualnetworks/subnets', parameters('vnet-name'), parameters('subnet-name'))]",
+        "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet-name'))]",
+        "subnetRef" : "[concat(variables('vnetID') , '/subnets/' , parameters('subnet-name'))]",
         "vmSize" : "Standard_D3_v2",
         "av-jump12-name" : "av-jump12-linux",
         "av-jump21-name" : "av-jump21-win",
