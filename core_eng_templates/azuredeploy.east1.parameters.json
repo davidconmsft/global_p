@@ -1,0 +1,258 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualNetworkName":{
+        "value": "gp-east1-vnet"
+      },
+      "virtualNetworkRegion":{
+        "value": "eastus"
+      },
+      "addressPrefix":{
+        "value": "10.48.0.0/16"
+      },
+      "dnsServerAddress":{
+        "value": ["8.8.8.8"]
+      },
+      "snaCORE-Reserved" :{
+        "value":"10.48.0.0/23"
+      },
+      "snaCORE-Prod-Edge" :{
+        "value":"10.48.2.0/23"
+      },
+      "snaCORE-NonProd-Edge" :{
+        "value":"10.48.4.0/23"
+      },
+      "snaCORE-CDE-Edge-Expansion" :{
+        "value":"10.48.6.0/23"
+      },
+      "snaCORE-CDE-Tier1-LB" :{
+        "value":"10.48.8.0/23"
+      },
+      "snaCORE-CDE-Tier2-LB" :{
+        "value":"10.48.10.0/23"
+      },
+      "snaCore-Expansion1":{
+        "value": "10.48.12.0/23"
+      },
+      "snaCore-CDE-Tier1":{
+        "value": "10.48.14.0/23"
+      },
+      "snaCore-CDE-Tier2":{
+        "value": "10.48.16.0/23"
+      },
+      "snaCore-CDE-Tier3":{
+        "value": "10.48.18.0/23"
+      },
+      "snaCore-NonCDE-Tier1-LB":{
+        "value": "10.48.20.0/23"
+      },
+      "snaCore-NonCDE-Tier2-LB":{
+        "value": "10.48.22.0/23"
+      },
+      "snaCore-Expansion2":{
+        "value": "10.48.24.0/23"
+      },
+      "snaCore-NonCDE-Tier1":{
+        "value": "10.48.26.0/23"
+      },
+      "snaCore-NonCDE-Tier2":{
+        "value": "10.48.28.0/23"
+      },
+      "snaCore-NonCDE-Tier3":{
+        "value": "10.48.30.0/23"
+      },
+      "snaProd-CDE-Tier1-LB":{
+        "value": "10.48.32.0/23"
+      },
+      "snaProd-CDE-Tier2-LB":{
+        "value": "10.48.34.0/23"
+      },
+      "snaProd-CDE-Expansion1":{
+        "value": "10.48.36.0/23"
+      },
+      "snaProd-CDE-Tier1":{
+        "value": "10.48.38.0/23"
+      },
+      "snaProd-CDE-Tier2":{
+        "value": "10.48.40.0/23"
+      },
+      "snaProd-CDE-Tier3":{
+        "value": "10.48.42.0/23"
+      },
+      "snaProd-CDE-Tier1-Container":{
+        "value": "10.48.44.0/23"
+      },
+      "snaProd-CDE-Tier2-Container":{
+        "value": "10.48.46.0/23"
+      },
+      "snaProd-CDE-Expansion2":{
+        "value": "10.48.48.0/23"
+      },
+      "snaCert-CDE-Tier1-LB":{
+        "value": "10.48.64.0/23"
+      },
+      "snaCert-CDE-Tier2-LB":{
+        "value": "10.48.66.0/23"
+      },
+      "snaCert-CDE-Expansion1":{
+        "value": "10.48.68.0/23"
+      },
+      "snaCert-CDE-Tier1":{
+        "value": "10.48.70.0/23"
+      },
+      "snaCert-CDE-Tier2":{
+        "value": "10.48.72.0/23"
+      },
+      "snaCert-CDE-Tier3":{
+        "value": "10.48.74.0/23"
+      },
+      "snaCert-CDE-Tier1-Container":{
+        "value": "10.48.76.0/23"
+      },
+      "snaCert-CDE-Tier2-Container":{
+        "value": "10.48.78.0/23"
+      },
+      "snaCert-CDE-Expansion2":{
+        "value": "10.48.80.0/23"
+      },
+      "snaProd-NonCDE-Tier1-LB":{
+        "value": "10.48.96.0/23"
+      },
+      "snaProd-NonCDE-Tier2-LB":{
+        "value": "10.48.98.0/23"
+      },
+      "snaProd-NonCDE-Expansion1":{
+        "value": "10.48.100.0/23"
+      },
+      "snaProd-NonCDE-Tier1":{
+        "value": "10.48.102.0/23"
+      },
+      "snaProd-NonCDE-Tier2":{
+        "value": "10.48.104.0/23"
+      },
+      "snaProd-NonCDE-Tier3":{
+        "value": "10.48.106.0/23"
+      },
+      "snaProd-NonCDE-Tier1-Container":{
+        "value": "10.48.108.0/23"
+      },
+      "snaProd-NonCDE-Tier2-Container":{
+        "value": "10.48.110.0/23"
+      },
+      "snaProd-NonCDE-Expansion2":{
+        "value": "10.48.112.0/23"
+      },
+      "snaCert-NonCDE-Tier1-LB":{
+        "value": "10.48.128.0/23"
+      },
+      "snaCert-NonCDE-Tier2-LB":{
+        "value": "10.48.130.0/23"
+      },
+      "snaCert-NonCDE-Expansion1":{
+        "value": "10.48.132.0/23"
+      },
+      "snaCert-NonCDE-Tier1":{
+        "value": "10.48.134.0/23"
+      },
+      "snaCert-NonCDE-Tier2":{
+        "value": "10.48.136.0/23"
+      },
+      "snaCert-NonCDE-Tier3":{
+        "value": "10.48.138.0/23"
+      },
+      "snaCert-NonCDE-Tier1-Container":{
+        "value": "10.48.140.0/23"
+      },
+      "snaCert-NonCDE-Tier2-Container":{
+        "value": "10.48.142.0/23"
+      },
+      "snaCert-NonCDE-Expansion2":{
+        "value": "10.48.144.0/23"
+      },
+      "snaQA-Tier1-LB":{
+        "value": "10.48.160.0/23"
+      },
+      "snaQA-Tier2-LB":{
+        "value": "10.48.162.0/23"
+      },
+      "snaQA-Expansion1":{
+        "value": "10.48.164.0/23"
+      },
+      "snaQA-Tier1":{
+        "value": "10.48.166.0/23"
+      },
+      "snaQA-Tier2":{
+        "value": "10.48.168.0/23"
+      },
+      "snaQA-Tier3":{
+        "value": "10.48.170.0/23"
+      },
+      "snaQA-Tier1-Container":{
+        "value": "10.48.172.0/23"
+      },
+      "snaQA-Tier2-Container":{
+        "value": "10.48.174.0/23"
+      },
+      "snaQA-Expansion2":{
+        "value": "10.48.176.0/23"
+      },
+      "snaDEV-Tier1-LB":{
+        "value": "10.48.192.0/23"
+      },
+      "snaDEV-Tier2-LB":{
+        "value": "10.48.194.0/23"
+      },
+      "snaDEV-Expansion1":{
+        "value": "10.48.196.0/23"
+      },
+      "snaDEV-Tier1":{
+        "value": "10.48.198.0/23"
+      },
+      "snaDEV-Tier2":{
+        "value": "10.48.200.0/23"
+      },
+      "snaDEV-Tier3":{
+        "value": "10.48.202.0/23"
+      },
+      "snaDEV-Tier1-Container":{
+        "value": "10.48.204.0/23"
+      },
+      "snaDEV-Tier2-Container":{
+        "value": "10.48.206.0/23"
+      },
+      "snaDEV-Expansion2":{
+        "value": "10.48.208.0/23"
+      },
+      "snaSandbox-Tier1":{
+        "value": "10.48.224.0/23"
+      },
+      "snaSandbox-Tier2":{
+        "value": "10.48.226.0/23"
+      },
+      "snaSandbox-Tier3":{
+        "value": "10.48.228.0/23"
+      },
+      "snaSandbox-Container":{
+        "value": "10.48.230.0/23"
+      },
+      "snaSandbox-Expansion1":{
+        "value": "10.48.232.0/23"
+      },
+      "snaInfrastructure-Tier1":{
+        "value": "10.48.240.0/23"
+      },
+      "snaInfrastructure-Tier2":{
+        "value": "10.48.242.0/23"
+      },
+      "snaInfrastructure-Tier3":{
+        "value": "10.48.244.0/23"
+      },
+      "snaInfrastructure-Container":{
+        "value": "10.48.246.0/23"
+      },
+      "snaInfrastructure-Expansion1":{
+        "value": "10.48.248.0/23"
+      }
+    }
+  }

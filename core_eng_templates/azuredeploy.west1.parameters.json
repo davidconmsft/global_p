@@ -1,0 +1,258 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualNetworkName":{
+      "value": "gp-west1-vnet"
+    },
+    "virtualNetworkRegion":{
+      "value": "westus"
+    },
+    "addressPrefix":{
+      "value": "10.49.0.0/16"
+    },
+    "dnsServerAddress":{
+      "value":["8.8.8.8"]
+    },
+    "snaCORE-Reserved" :{
+      "value":"10.49.0.0/23"
+    },
+    "snaCORE-Prod-Edge" :{
+      "value":"10.49.2.0/23"
+    },
+    "snaCORE-NonProd-Edge" :{
+      "value":"10.49.4.0/23"
+    },
+    "snaCORE-CDE-Edge-Expansion" :{
+      "value":"10.49.6.0/23"
+    },
+    "snaCORE-CDE-Tier1-LB" :{
+      "value":"10.49.8.0/23"
+    },
+    "snaCORE-CDE-Tier2-LB" :{
+      "value":"10.49.10.0/23"
+    },
+    "snaCore-Expansion1":{
+      "value": "10.49.12.0/23"
+    },
+    "snaCore-CDE-Tier1":{
+      "value": "10.49.14.0/23"
+    },
+    "snaCore-CDE-Tier2":{
+      "value": "10.49.16.0/23"
+    },
+    "snaCore-CDE-Tier3":{
+      "value": "10.49.18.0/23"
+    },
+    "snaCore-NonCDE-Tier1-LB":{
+      "value": "10.49.20.0/23"
+    },
+    "snaCore-NonCDE-Tier2-LB":{
+      "value": "10.49.22.0/23"
+    },
+    "snaCore-Expansion2":{
+      "value": "10.49.24.0/23"
+    },
+    "snaCore-NonCDE-Tier1":{
+      "value": "10.49.26.0/23"
+    },
+    "snaCore-NonCDE-Tier2":{
+      "value": "10.49.28.0/23"
+    },
+    "snaCore-NonCDE-Tier3":{
+      "value": "10.49.30.0/23"
+    },
+    "snaProd-CDE-Tier1-LB":{
+      "value": "10.49.32.0/23"
+    },
+    "snaProd-CDE-Tier2-LB":{
+      "value": "10.49.34.0/23"
+    },
+    "snaProd-CDE-Expansion1":{
+      "value": "10.49.36.0/23"
+    },
+    "snaProd-CDE-Tier1":{
+      "value": "10.49.38.0/23"
+    },
+    "snaProd-CDE-Tier2":{
+      "value": "10.49.40.0/23"
+    },
+    "snaProd-CDE-Tier3":{
+      "value": "10.49.42.0/23"
+    },
+    "snaProd-CDE-Tier1-Container":{
+      "value": "10.49.44.0/23"
+    },
+    "snaProd-CDE-Tier2-Container":{
+      "value": "10.49.46.0/23"
+    },
+    "snaProd-CDE-Expansion2":{
+      "value": "10.49.48.0/23"
+    },
+    "snaCert-CDE-Tier1-LB":{
+      "value": "10.49.64.0/23"
+    },
+    "snaCert-CDE-Tier2-LB":{
+      "value": "10.49.66.0/23"
+    },
+    "snaCert-CDE-Expansion1":{
+      "value": "10.49.68.0/23"
+    },
+    "snaCert-CDE-Tier1":{
+      "value": "10.49.70.0/23"
+    },
+    "snaCert-CDE-Tier2":{
+      "value": "10.49.72.0/23"
+    },
+    "snaCert-CDE-Tier3":{
+      "value": "10.49.74.0/23"
+    },
+    "snaCert-CDE-Tier1-Container":{
+      "value": "10.49.76.0/23"
+    },
+    "snaCert-CDE-Tier2-Container":{
+      "value": "10.49.78.0/23"
+    },
+    "snaCert-CDE-Expansion2":{
+      "value": "10.49.80.0/23"
+    },
+    "snaProd-NonCDE-Tier1-LB":{
+      "value": "10.49.96.0/23"
+    },
+    "snaProd-NonCDE-Tier2-LB":{
+      "value": "10.49.98.0/23"
+    },
+    "snaProd-NonCDE-Expansion1":{
+      "value": "10.49.100.0/23"
+    },
+    "snaProd-NonCDE-Tier1":{
+      "value": "10.49.102.0/23"
+    },
+    "snaProd-NonCDE-Tier2":{
+      "value": "10.49.104.0/23"
+    },
+    "snaProd-NonCDE-Tier3":{
+      "value": "10.49.106.0/23"
+    },
+    "snaProd-NonCDE-Tier1-Container":{
+      "value": "10.49.108.0/23"
+    },
+    "snaProd-NonCDE-Tier2-Container":{
+      "value": "10.49.110.0/23"
+    },
+    "snaProd-NonCDE-Expansion2":{
+      "value": "10.49.112.0/23"
+    },
+    "snaCert-NonCDE-Tier1-LB":{
+      "value": "10.49.128.0/23"
+    },
+    "snaCert-NonCDE-Tier2-LB":{
+      "value": "10.49.130.0/23"
+    },
+    "snaCert-NonCDE-Expansion1":{
+      "value": "10.49.132.0/23"
+    },
+    "snaCert-NonCDE-Tier1":{
+      "value": "10.49.134.0/23"
+    },
+    "snaCert-NonCDE-Tier2":{
+      "value": "10.49.136.0/23"
+    },
+    "snaCert-NonCDE-Tier3":{
+      "value": "10.49.138.0/23"
+    },
+    "snaCert-NonCDE-Tier1-Container":{
+      "value": "10.49.140.0/23"
+    },
+    "snaCert-NonCDE-Tier2-Container":{
+      "value": "10.49.142.0/23"
+    },
+    "snaCert-NonCDE-Expansion2":{
+      "value": "10.49.144.0/23"
+    },
+    "snaQA-Tier1-LB":{
+      "value": "10.49.160.0/23"
+    },
+    "snaQA-Tier2-LB":{
+      "value": "10.49.162.0/23"
+    },
+    "snaQA-Expansion1":{
+      "value": "10.49.164.0/23"
+    },
+    "snaQA-Tier1":{
+      "value": "10.49.166.0/23"
+    },
+    "snaQA-Tier2":{
+      "value": "10.49.168.0/23"
+    },
+    "snaQA-Tier3":{
+      "value": "10.49.170.0/23"
+    },
+    "snaQA-Tier1-Container":{
+      "value": "10.49.172.0/23"
+    },
+    "snaQA-Tier2-Container":{
+      "value": "10.49.174.0/23"
+    },
+    "snaQA-Expansion2":{
+      "value": "10.49.176.0/23"
+    },
+    "snaDEV-Tier1-LB":{
+      "value": "10.49.192.0/23"
+    },
+    "snaDEV-Tier2-LB":{
+      "value": "10.49.194.0/23"
+    },
+    "snaDEV-Expansion1":{
+      "value": "10.49.196.0/23"
+    },
+    "snaDEV-Tier1":{
+      "value": "10.49.198.0/23"
+    },
+    "snaDEV-Tier2":{
+      "value": "10.49.200.0/23"
+    },
+    "snaDEV-Tier3":{
+      "value": "10.49.202.0/23"
+    },
+    "snaDEV-Tier1-Container":{
+      "value": "10.49.204.0/23"
+    },
+    "snaDEV-Tier2-Container":{
+      "value": "10.49.206.0/23"
+    },
+    "snaDEV-Expansion2":{
+      "value": "10.49.208.0/23"
+    },
+    "snaSandbox-Tier1":{
+      "value": "10.49.224.0/23"
+    },
+    "snaSandbox-Tier2":{
+      "value": "10.49.226.0/23"
+    },
+    "snaSandbox-Tier3":{
+      "value": "10.49.228.0/23"
+    },
+    "snaSandbox-Container":{
+      "value": "10.49.230.0/23"
+    },
+    "snaSandbox-Expansion1":{
+      "value": "10.49.232.0/23"
+    },
+    "snaInfrastructure-Tier1":{
+      "value": "10.49.240.0/23"
+    },
+    "snaInfrastructure-Tier2":{
+      "value": "10.49.242.0/23"
+    },
+    "snaInfrastructure-Tier3":{
+      "value": "10.49.244.0/23"
+    },
+    "snaInfrastructure-Container":{
+      "value": "10.49.246.0/23"
+    },
+    "snaInfrastructure-Expansion1":{
+      "value": "10.49.248.0/23"
+    }
+  }
+}

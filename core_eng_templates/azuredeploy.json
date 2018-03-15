@@ -1,0 +1,891 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "adminUserName" : {
+        "type": "string",
+        "metadata": {
+          "description" : "Administrative UserName for all VMs"
+        }
+      },
+      "adminPassword" : {
+        "type": "string",
+        "metadata": {
+          "description" : "Password for the Administrative Users set for VMs"
+        }
+      },
+      "virtualNetworkName":{
+        "type": "string",
+        "metadata": {
+          "description": "Name for Overall VNet"
+        }
+      },
+      "virtualNetworkRegion":{
+        "type": "string",
+        "metadata": {
+          "description": "Location of the Overall VNet"
+        }
+      },
+      "addressPrefix":{
+        "type": "string",
+        "metadata": {
+          "description": "Address Space for Overall VNet"
+        }
+      },
+      "dnsServerAddress":{
+        "type": "array",
+        "metadata": {
+          "description": "IP Address for VNet DNS Resolution"
+        }
+      },
+      "snaCORE-Reserved" :{
+        "type":"string"
+      },
+      "snaCORE-Prod-Edge" :{
+        "type":"string"
+      },
+      "snaCORE-NonProd-Edge" :{
+        "type":"string"
+      },
+      "snaCORE-CDE-Edge-Expansion" :{
+        "type":"string"
+      },
+      "snaCORE-CDE-Tier1-LB" :{
+        "type":"string"
+      },
+      "snaCORE-CDE-Tier2-LB" :{
+        "type":"string"
+      },
+      "snaCore-Expansion1":{
+        "type": "string"
+      },
+      "snaCore-CDE-Tier1":{
+        "type": "string"
+      },
+      "snaCore-CDE-Tier2":{
+        "type": "string"
+      },
+      "snaCore-CDE-Tier3":{
+        "type": "string"
+      },
+      "snaCore-NonCDE-Tier1-LB":{
+        "type": "string"
+      },
+      "snaCore-NonCDE-Tier2-LB":{
+        "type": "string"
+      },
+      "snaCore-Expansion2":{
+        "type": "string"
+      },
+      "snaCore-NonCDE-Tier1":{
+        "type": "string"
+      },
+      "snaCore-NonCDE-Tier2":{
+        "type": "string"
+      },
+      "snaCore-NonCDE-Tier3":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier1-LB":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier2-LB":{
+        "type": "string"
+      },
+      "snaProd-CDE-Expansion1":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier1":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier2":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier3":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier1-Container":{
+        "type": "string"
+      },
+      "snaProd-CDE-Tier2-Container":{
+        "type": "string"
+      },
+      "snaProd-CDE-Expansion2":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier1-LB":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier2-LB":{
+        "type": "string"
+      },
+      "snaCert-CDE-Expansion1":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier1":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier2":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier3":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier1-Container":{
+        "type": "string"
+      },
+      "snaCert-CDE-Tier2-Container":{
+        "type": "string"
+      },
+      "snaCert-CDE-Expansion2":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier1-LB":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier2-LB":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Expansion1":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier1":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier2":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier3":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier1-Container":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Tier2-Container":{
+        "type": "string"
+      },
+      "snaProd-NonCDE-Expansion2":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier1-LB":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier2-LB":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Expansion1":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier1":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier2":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier3":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier1-Container":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Tier2-Container":{
+        "type": "string"
+      },
+      "snaCert-NonCDE-Expansion2":{
+        "type": "string"
+      },
+      "snaQA-Tier1-LB":{
+        "type": "string"
+      },
+      "snaQA-Tier2-LB":{
+        "type": "string"
+      },
+      "snaQA-Expansion1":{
+        "type": "string"
+      },
+      "snaQA-Tier1":{
+        "type": "string"
+      },
+      "snaQA-Tier2":{
+        "type": "string"
+      },
+      "snaQA-Tier3":{
+        "type": "string"
+      },
+      "snaQA-Tier1-Container":{
+        "type": "string"
+      },
+      "snaQA-Tier2-Container":{
+        "type": "string"
+      },
+      "snaQA-Expansion2":{
+        "type": "string"
+      },
+      "snaDEV-Tier1-LB":{
+        "type": "string"
+      },
+      "snaDEV-Tier2-LB":{
+        "type": "string"
+      },
+      "snaDEV-Expansion1":{
+        "type": "string"
+      },
+      "snaDEV-Tier1":{
+        "type": "string"
+      },
+      "snaDEV-Tier2":{
+        "type": "string"
+      },
+      "snaDEV-Tier3":{
+        "type": "string"
+      },
+      "snaDEV-Tier1-Container":{
+        "type": "string"
+      },
+      "snaDEV-Tier2-Container":{
+        "type": "string"
+      },
+      "snaDEV-Expansion2":{
+        "type": "string"
+      },
+      "snaSandbox-Tier1":{
+        "type": "string"
+      },
+      "snaSandbox-Tier2":{
+        "type": "string"
+      },
+      "snaSandbox-Tier3":{
+        "type": "string"
+      },
+      "snaSandbox-Container":{
+        "type": "string"
+      },
+      "snaSandbox-Expansion1":{
+        "type": "string"
+      },
+      "snaInfrastructure-Tier1":{
+        "type": "string"
+      },
+      "snaInfrastructure-Tier2":{
+        "type": "string"
+      },
+      "snaInfrastructure-Tier3":{
+        "type": "string"
+      },
+      "snaInfrastructure-Container":{
+        "type": "string"
+      },
+      "snaInfrastructure-Expansion1":{
+        "type": "string"
+      }
+     },
+    "variables": {
+      "snnCORE-Reserved" : "CORE-Reserved",
+      "snnCORE-Prod-Edge" : "CORE-Prod-Edge",
+      "snnCORE-NonProd-Edge" : "CORE-NonProd-Edge",
+      "snnCORE-CDE-Edge-Expansion" : "CORE-CDE-Edge-Expansion",
+      "snnCORE-CDE-Tier1-LB" : "CORE-CDE-Tier1-LB",
+      "snnCORE-CDE-Tier2-LB" : "CORE-CDE-Tier2-LB",
+      "snnCORE-Expansion1" : "CORE-Expansion1",
+      "snnCORE-CDE-Tier1" : "CORE-CDE-Tier1",
+      "snnCORE-CDE-Tier2" : "CORE-CDE-Tier2",
+      "snnCORE-CDE-Tier3" : "CORE-CDE-Tier3",
+      "snnCORE-NonCDE-Tier1-LB" : "CORE-NonCDE-Tier1-LB",
+      "snnCORE-NonCDE-Tier2-LB" : "CORE-NonCDE-Tier2-LB",
+      "snnCORE-Expansion2" : "CORE-Expansion2",
+      "snnCORE-NonCDE-Tier1" : "CORE-NonCDE-Tier1",
+      "snnCORE-NonCDE-Tier2" : "CORE-NonCDE-Tier2",
+      "snnCORE-NonCDE-Tier3" : "CORE-NonCDE-Tier3",
+      "snnPROD-CDE-Tier1-LB" : "PROD-CDE-Tier1-LB",
+      "snnPROD-CDE-Tier2-LB" : "PROD-CDE-Tier2-LB",
+      "snnPROD-CDE-Expansion1" : "PROD-CDE-Expansion1",
+      "snnPROD-CDE-Tier1" : "PROD-CDE-Tier1",
+      "snnPROD-CDE-Tier2" : "PROD-CDE-Tier2",
+      "snnPROD-CDE-Tier3" : "PROD-CDE-Tier3",
+      "snnPROD-CDE-Tier1-Container" : "PROD-CDE-Tier1-Container",
+      "snnPROD-CDE-Tier2-Container" : "PROD-CDE-Tier2-Container",
+      "snnPROD-CDE-Expansion2" : "PROD-CDE-Expansion2",
+      "snnCERT-CDE-Tier1-LB" : "CERT-CDE-Tier1-LB",
+      "snnCERT-CDE-Tier2-LB" : "CERT-CDE-Tier2-LB",
+      "snnCERT-CDE-Expansion1" : "CERT-CDE-Expansion1",
+      "snnCERT-CDE-Tier1" : "CERT-CDE-Tier1",
+      "snnCERT-CDE-Tier2" : "CERT-CDE-Tier2",
+      "snnCERT-CDE-Tier3" : "CERT-CDE-Tier3",
+      "snnCERT-CDE-Tier1-Container" : "CERT-CDE-Tier1-Container",
+      "snnCERT-CDE-Tier2-Container" : "CERT-CDE-Tier2-Container",
+      "snnCERT-CDE-Expansion2" : "CERT-CDE-Expansion2",
+      "snnPROD-NonCDE-Tier1-LB" : "PROD-NonCDE-Tier1-LB",
+      "snnPROD-NonCDE-Tier2-LB" : "PROD-NonCDE-Tier2-LB",
+      "snnPROD-NonCDE-Expansion1" : "PROD-NonCDE-Expansion1",
+      "snnPROD-NonCDE-Tier1" : "PROD-NonCDE-Tier1",
+      "snnPROD-NonCDE-Tier2" : "PROD-NonCDE-Tier2",
+      "snnPROD-NonCDE-Tier3" : "PROD-NonCDE-Tier3",
+      "snnPROD-NonCDE-Tier1-Container" : "PROD-NonCDE-Tier1-Container",
+      "snnPROD-NonCDE-Tier2-Container" : "PROD-NonCDE-Tier2-Container",
+      "snnPROD-NonCDE-Expansion2" : "PROD-NonCDE-Expansion2",
+      "snnCERT-NonCDE-Tier1-LB" : "CERT-NonCDE-Tier1-LB",
+      "snnCERT-NonCDE-Tier2-LB" : "CERT-NonCDE-Tier2-LB",
+      "snnCERT-NonCDE-Expansion1" : "CERT-NonCDE-Expansion1",
+      "snnCERT-NonCDE-Tier1" : "CERT-NonCDE-Tier1",
+      "snnCERT-NonCDE-Tier2" : "CERT-NonCDE-Tier2",
+      "snnCERT-NonCDE-Tier3" : "CERT-NonCDE-Tier3",
+      "snnCERT-NonCDE-Tier1-Container" : "CERT-NonCDE-Tier1-Container",
+      "snnCERT-NonCDE-Tier2-Container" : "CERT-NonCDE-Tier2-Container",
+      "snnCERT-NonCDE-Expansion2" : "CERT-NonCDE-Expansion2",
+      "snnQA-Tier1-LB" : "QA-Tier1-LB",
+      "snnQA-Tier2-LB" : "QA-Tier2-LB",
+      "snnQA-Expansion1" : "QA-Expansion1",
+      "snnQA-Tier1" : "QA-Tier1",
+      "snnQA-Tier2" : "QA-Tier2",
+      "snnQA-Tier3" : "QA-Tier3",
+      "snnQA-Tier1-Container" : "QA-Tier1-Container",
+      "snnQA-Tier2-Container" : "QA-Tier2-Container",
+      "snnQA-Expansion2" : "QA-Expansion2",
+      "snnDEV-Tier1-LB" : "DEV-Tier1-LB",
+      "snnDEV-Tier2-LB" : "DEV-Tier2-LB",
+      "snnDEV-Expansion1" : "DEV-Expansion1",
+      "snnDEV-Tier1" : "DEV-Tier1",
+      "snnDEV-Tier2" : "DEV-Tier2",
+      "snnDEV-Tier3" : "DEV-Tier3",
+      "snnDEV-Tier1-Container" : "DEV-Tier1-Container",
+      "snnDEV-Tier2-Container" : "DEV-Tier2-Container",
+      "snnDEV-Expansion2" : "DEV-Expansion2",
+      "snnSandbox-Tier1" : "Sandbox-Tier1",
+      "snnSandbox-Tier2" : "Sandbox-Tier2",
+      "snnSandbox-Tier3" : "Sandbox-Tier3",
+      "snnSandbox-Container" : "Sandbox-Container",
+      "snnSandbox-Expansion1" : "Sandbox-Expansion1",
+      "snnInfrastructure-Tier1" : "Infrastructure-Tier1",
+      "snnInfrastructure-Tier2" : "Infrastructure-Tier2",
+      "snnInfrastructure-Tier3" : "Infrastructure-Tier3",
+      "snnInfrastructure-Container" : "Infrastructure-Container",
+      "snnInfrastructure-Expansion1" : "Infrastructure-Expansion1",
+      "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2017-10-01",
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[parameters('virtualNetworkName')]",
+        "location": "[parameters('virtualNetworkRegion')]",
+        "tags": {
+          "company" : "globalpay",
+          "country" : "united_states",
+          "organization" : "bts"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "[parameters('addressPrefix')]"
+            ]
+          },
+        "dhcpOptions": {
+          "dnsServers": "[parameters('dnsServerAddress')]"
+        },
+          "subnets": [
+            {
+              "name": "[variables('snnCORE-Reserved')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-Reserved')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-Prod-Edge')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-Prod-Edge')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-NonProd-Edge')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-NonProd-Edge')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-CDE-Edge-Expansion')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-CDE-Edge-Expansion')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-CDE-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-CDE-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-CDE-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-CDE-Tier2-LB')]"
+              }
+            },          
+            {
+              "name": "[variables('snnCORE-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-CDE-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-CDE-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-CDE-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-CDE-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-CDE-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-CDE-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-NonCDE-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-NonCDE-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-NonCDE-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-NonCDE-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-NonCDE-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-NonCDE-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-NonCDE-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-NonCDE-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCORE-NonCDE-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCORE-NonCDE-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier1-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier1-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Tier2-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Tier2-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-CDE-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-CDE-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier1-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier1-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Tier2-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Tier2-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-CDE-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-CDE-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier1-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier1-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Tier2-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Tier2-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnPROD-NonCDE-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaPROD-NonCDE-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier1-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier1-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Tier2-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Tier2-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnCERT-NonCDE-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaCERT-NonCDE-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier1-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier1-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Tier2-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Tier2-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnQA-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaQA-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier1-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier1-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier2-LB')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier2-LB')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier1-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier1-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Tier2-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Tier2-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnDEV-Expansion2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaDEV-Expansion2')]"
+              }
+            },
+            {
+              "name": "[variables('snnSandbox-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaSandbox-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnSandbox-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaSandbox-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnSandbox-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaSandbox-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnSandbox-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaSandbox-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnSandbox-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaSandbox-Expansion1')]"
+              }
+            },
+            {
+              "name": "[variables('snnInfrastructure-Tier1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaInfrastructure-Tier1')]"
+              }
+            },
+            {
+              "name": "[variables('snnInfrastructure-Tier2')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaInfrastructure-Tier2')]"
+              }
+            },
+            {
+              "name": "[variables('snnInfrastructure-Tier3')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaInfrastructure-Tier3')]"
+              }
+            },
+            {
+              "name": "[variables('snnInfrastructure-Container')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaInfrastructure-Container')]"
+              }
+            },
+            {
+              "name": "[variables('snnInfrastructure-Expansion1')]",
+              "properties": {
+                "addressPrefix": "[parameters('snaInfrastructure-Expansion1')]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2017-05-10",
+        "name" : "QATemplate",
+        "type": "Microsoft.Resources/deployments",
+        "properties" : {
+          "mode" : "Incremental",
+          "templateLink" : {
+            "contentVersion": "1.0.0.0",
+            "uri": ""
+          },
+          "parameters" : {
+            "vnet-name" : "[parameters('virtualNetworkName')]",
+            "subnet-name" : "[parameters('snaQA-Tier2')]",
+            "adminUserName" : "[parameters('adminUserName')]",
+            "adminPassword" : "[parameters('adminPassword')]"
+          }
+        }
+      }
+    ],
+    "outputs" : {
+
+    }
+  }
