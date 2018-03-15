@@ -879,7 +879,7 @@
           },
           "parameters" : {
             "vnet-name" : {"value" : "[parameters('virtualNetworkName')]"},
-            "subnet-name" : {"value" : "[parameters('snaQA-Tier2')]"},
+            "subnet-name" : {"value" : "[variables('snnQA-Tier2')]"},
             "adminUserName" : {"value" : "[parameters('adminUserName')]"},
             "adminPassword" : {"value" : "[parameters('adminPassword')]"}
           }
