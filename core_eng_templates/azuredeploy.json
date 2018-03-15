@@ -874,13 +874,13 @@
           "mode" : "Incremental",
           "templateLink" : {
             "contentVersion": "1.0.0.0",
-            "uri": ""
+            "uri": "https://github.com/brharr/global_p/blob/master/core_eng_templates/azuredeployqa.json"
           },
           "parameters" : {
-            "vnet-name" : "[parameters('virtualNetworkName')]",
-            "subnet-name" : "[parameters('snaQA-Tier2')]",
-            "adminUserName" : "[parameters('adminUserName')]",
-            "adminPassword" : "[parameters('adminPassword')]"
+            "vnet-name" : {"value" : "[parameters('virtualNetworkName')]"},
+            "subnet-name" : {"value" : "[parameters('snaQA-Tier2')]"},
+            "adminUserName" : {"value" : "[parameters('adminUserName')]"},
+            "adminPassword" : {"value" : "[parameters('adminPassword')]"}
           }
         }
       }
