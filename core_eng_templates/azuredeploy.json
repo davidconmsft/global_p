@@ -870,11 +870,12 @@
         "apiVersion": "2017-05-10",
         "name" : "QATemplate",
         "type": "Microsoft.Resources/deployments",
+        "dependsOn": [ "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]" ],
         "properties" : {
           "mode" : "Incremental",
           "templateLink" : {
             "contentVersion": "1.0.0.0",
-            "uri": "https://github.com/brharr/global_p/blob/master/core_eng_templates/azuredeployqa.json"
+            "uri": "https://raw.githubusercontent.com/brharr/global_p/master/core_eng_templates/azuredeployqa.json"
           },
           "parameters" : {
             "vnet-name" : {"value" : "[parameters('virtualNetworkName')]"},
