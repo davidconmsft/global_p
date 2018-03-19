@@ -1,0 +1,1050 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnet-name" : {
+            "type": "string"
+        },
+        "subnet-name" : {
+            "type": "string"
+        },
+        "adminUserName" : {
+            "type": "string"
+        },
+        "adminPassword" : {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet-name'))]",
+        "subnetRef" : "[concat(variables('vnetID') , '/subnets/' , parameters('subnet-name'))]",
+        "vmSize" : "Standard_D3_v2",
+        "av-dns5-name" : "av-dns5-linux",
+        "av-wdc17-name" : "av-wdc17-win",
+        "vm-win-publisher" : "MicrosoftWindowsServer",
+        "vm-win-offer" : "WindowsServer",
+        "vm-win-version" : "2016-Datacenter",
+        "vm-rhel-publisher" : "RedHat",
+        "vm-rhel-offer" : "RHEL",
+        "vm-rhel-version" : "7-RAW",
+        "vm-name-wdc-win" : "auwnwg-wdc-a0",
+        "vm-name-dns-lx" : "auwnlg-dns-a0",
+        "vm-name-lic-win" : "auwnwg-lic-a0",
+        "vm-name-inf-win" : "auwnwg-inf-a0",
+        "vm-name-iem-win" : "auwnwg-iem-a0",
+        "vm-name-avm-win" : "auwnwg-avm-a0",
+        "vm-name-wsus-win" : "auwnwg-wsus-a0",
+        "vm-name-log-lx" : "auwnlg-log-a0",
+        "vm-name-scan-lx" : "auwnlg-scan-a0",
+        "vm-name-git-lx" : "auwnlg-git-a0",
+        "vm-name-pup-lx" : "auwnlg-pup-a0",
+        "vm-name-repo-lx" : "auwnlg-repo-a0",
+        "nic-name-lic" : "nic-auwnwg-lic",
+        "nic-name-inf" : "nic-auwnwg-inf",
+        "nic-name-iem" : "nic-auwnwg-iem",
+        "nic-name-avm" : "nic-auwnwg-avm",
+        "nic-name-wsus" : "nic-auwnwg-wsus",
+        "nic-name-wdc" : "nic-auwnwg-wdc",
+        "nic-name-dns" : "nic-auwnlg-dns",
+        "nic-name-log" : "nic-auwnlg-log",
+        "nic-name-scan" : "nic-auwnlg-scan",
+        "nic-name-git" : "nic-auwnlg-git",
+        "nic-name-pup" : "nic-auwnlg-pup",
+        "nic-name-repo" : "nic-auwnlg-repo",
+        "wdccount" : 2,
+        "dnscount" : 2
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[variables('av-wdc17-name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 3
+            },
+            "sku" : { "name": "Aligned" }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[variables('av-dns5-name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 3
+            },
+            "sku" : { "name": "Aligned" }
+        },
+
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-wdc'), '-0', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name" : "wdcnicloop",
+                "count" : "[variables('wdccount')]"
+            },
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-wdc-win'), copyIndex())]",
+            "copy": {
+              "name": "vmwdcwinloop",
+              "count": "[variables('wdccount')]"
+            },
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-wdc'), '-0', copyIndex())]",
+              "[concat('Microsoft.Compute/availabilitySets/', variables('av-wdc17-name'))]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "availabilitySet": {
+                "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('av-wdc17-name'))]"
+              },
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-wdc-win'), copyIndex())]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-win-publisher')]",
+                  "offer": "[variables('vm-win-offer')]",
+                  "sku": "[variables('vm-win-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                  "name" : "[concat(variables('vm-name-wdc-win'), copyIndex(), '-osdisk')]",
+                  "createOption": "FromImage",
+                  "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-wdc'), '-0', copyIndex()))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-dns'), '-0', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name" : "dnsnicloop",
+                "count" : "[variables('dnscount')]"
+            },
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-dns-lx'), copyIndex())]",
+            "copy": {
+              "name": "vmdnsloop",
+              "count": "[variables('dnscount')]"
+            },
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-dns'), '-0', copyIndex())]",
+              "[concat('Microsoft.Compute/availabilitySets/', variables('av-dns5-name'))]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "availabilitySet": {
+                "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('av-dns5-name'))]"
+              },
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-dns-lx'), copyIndex())]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-dns-lx'), copyIndex(), '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-dns'), '-0', copyIndex()))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-lic'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-lic-win'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-lic'), '-0', '1')]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-lic-win'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                    "publisher": "[variables('vm-win-publisher')]",
+                    "offer": "[variables('vm-win-offer')]",
+                    "sku": "[variables('vm-win-version')]",
+                    "version": "latest"
+                  },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-lic-win'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-lic'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-inf'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-inf-win'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-inf'), '-0', '1')]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-inf-win'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                    "publisher": "[variables('vm-win-publisher')]",
+                    "offer": "[variables('vm-win-offer')]",
+                    "sku": "[variables('vm-win-version')]",
+                    "version": "latest"
+                  },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-inf-win'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-inf'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-iem'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-iem-win'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-iem'), '-0', '1')]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-iem-win'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                    "publisher": "[variables('vm-win-publisher')]",
+                    "offer": "[variables('vm-win-offer')]",
+                    "sku": "[variables('vm-win-version')]",
+                    "version": "latest"
+                  },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-iem-win'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-iem'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-avm'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-avm-win'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-avm'), '-0', '1')]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-avm-win'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                    "publisher": "[variables('vm-win-publisher')]",
+                    "offer": "[variables('vm-win-offer')]",
+                    "sku": "[variables('vm-win-version')]",
+                    "version": "latest"
+                  },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-avm-win'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-avm'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-wsus'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-wsus-win'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-wsus'), '-0', '1')]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-cde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-wsus-win'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                    "publisher": "[variables('vm-win-publisher')]",
+                    "offer": "[variables('vm-win-offer')]",
+                    "sku": "[variables('vm-win-version')]",
+                    "version": "latest"
+                  },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-wsus-win'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-wsus'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-log'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-log-lx'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-log'), '-0', '1')]"
+              ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-log-lx'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-log-lx'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-log'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-scan'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-scan-lx'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-scan'), '-0', '1')]"
+              ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-scan-lx'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-scan-lx'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-scan'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-git'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-git-lx'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-git'), '-0', '1')]"
+              ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-git-lx'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-git-lx'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-git'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-pup'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-pup-lx'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-pup'), '-0', '1')]"
+              ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-pup-lx'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-pup-lx'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-pup'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-repo'), '-0', '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-repo-lx'), '1')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-repo'), '-0', '1')]"
+              ],
+            "tags": {
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-repo-lx'), '1')]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-repo-lx'), '1', '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-repo'), '-0', '1'))]"
+                  }
+                ]
+              }
+            }
+        }
+
+    ]
+}
