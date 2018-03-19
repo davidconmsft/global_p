@@ -1,0 +1,371 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnet-name" : {
+            "type": "string"
+        },
+        "subnet-name" : {
+            "type": "string"
+        },
+        "adminUserName" : {
+            "type": "string"
+        },
+        "adminPassword" : {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "vnetID" : "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet-name'))]",
+        "subnetRef" : "[concat(variables('vnetID') , '/subnets/' , parameters('subnet-name'))]",
+        "vmSize" : "Standard_D3_v2",
+        "av-jump6-name" : "av-jump6-linux",
+        "av-jump16-name" : "av-jump16-win",
+        "av-smtp7-name" : "av-smtp7-linux",
+        "vm-win-publisher" : "MicrosoftWindowsServer",
+        "vm-win-offer" : "WindowsServer",
+        "vm-win-version" : "2016-Datacenter",
+        "vm-rhel-publisher" : "RedHat",
+        "vm-rhel-offer" : "RHEL",
+        "vm-rhel-version" : "7-RAW",
+        "vm-name-jump-win" : "auwnwg-jump-a0",
+        "vm-name-jump-lx" : "auwnlg-jump-a0",
+        "vm-name-smtp" : "auwnlg-smtp-a0",
+         "nic-name-smtp" : "nic-auwnlg-smtp",
+        "nic-name-jump-win" : "nic-auwnwg-jump",
+        "nic-name-jump-lx" : "nic-auwnlg-jump",
+        "smtpcount" : 2,
+        "jumpwincount" : 2,
+        "jumplxcount" : 2
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[variables('av-jump6-name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 3
+            },
+            "sku" : { "name": "Aligned" }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[variables('av-jump16-name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 3
+            },
+            "sku" : { "name": "Aligned" }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[variables('av-smtp7-name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+                "platformFaultDomainCount": 3,
+                "platformUpdateDomainCount": 3
+            },
+            "sku" : { "name": "Aligned" }
+        },
+
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-smtp'), '-0', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name" : "smtpnicloop",
+                "count" : "[variables('smtpcount')]"
+            },
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-smtp'), copyIndex())]",
+            "copy": {
+              "name": "vmsmtploop",
+              "count": "[variables('smtpcount')]"
+            },
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-smtp'), '-0', copyIndex())]",
+              "[concat('Microsoft.Compute/availabilitySets/', variables('av-smtp7-name'))]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "availabilitySet": {
+                "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('av-smtp7-name'))]"
+              },
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-smtp'), copyIndex())]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-smtp'), copyIndex(), '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-smtp'), '-0', copyIndex()))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-jump-win'), '-0', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name" : "jumpwinnicloop",
+                "count" : "[variables('jumpwincount')]"
+            },
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-jump-win'), copyIndex())]",
+            "copy": {
+              "name": "vmjumpwinloop",
+              "count": "[variables('jumpwincount')]"
+            },
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-jump-win'), '-0', copyIndex())]",
+              "[concat('Microsoft.Compute/availabilitySets/', variables('av-jump16-name'))]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "availabilitySet": {
+                "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('av-jump16-name'))]"
+              },
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-jump-win'), copyIndex())]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-win-publisher')]",
+                  "offer": "[variables('vm-win-offer')]",
+                  "sku": "[variables('vm-win-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                  "name" : "[concat(variables('vm-name-jump-win'), copyIndex(), '-osdisk')]",
+                  "createOption": "FromImage",
+                  "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-jump-win'), '-0', copyIndex()))]"
+                  }
+                ]
+              }
+            }
+        },
+        {
+            "apiVersion": "2017-06-01",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(variables('nic-name-jump-lx'), '-0', copyIndex())]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name" : "jumplxnicloop",
+                "count" : "[variables('jumplxcount')]"
+            },
+            "dependsOn": [ ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                      "id": "[variables('subnetRef')]"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[concat(variables('vm-name-jump-lx'), copyIndex())]",
+            "copy": {
+              "name": "vmjumplxloop",
+              "count": "[variables('jumplxcount')]"
+            },
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/networkInterfaces/', variables('nic-name-jump-lx'), '-0', copyindex())]",
+              "[concat('Microsoft.Compute/availabilitySets/', variables('av-jump6-name'))]"
+            ],
+            "tags": {
+              "lifecycle" : "prod-noncde",
+              "dataclassification" : "dc3",
+              "company" : "globalpay",
+              "costcenter" : "24039",
+              "country" : "united_states",
+              "organization" : "bts",
+              "department" : "infrastructure"
+            },
+            "properties": {
+              "availabilitySet": {
+                "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('av-jump6-name'))]"
+              },
+              "hardwareProfile": {
+                "vmSize": "[variables('vmSize')]"
+              },
+              "osProfile": {
+                "computerName": "[concat(variables('vm-name-smtp'), copyIndex())]",
+                "adminUsername": "[parameters('adminUsername')]",
+                "adminPassword": "[parameters('adminPassword')]"
+              },
+              "storageProfile": {
+                "imageReference": {
+                  "publisher": "[variables('vm-rhel-publisher')]",
+                  "offer": "[variables('vm-rhel-offer')]",
+                  "sku": "[variables('vm-rhel-version')]",
+                  "version": "latest"
+                },
+                "osDisk": {
+                    "name" : "[concat(variables('vm-name-jump-lx'), copyIndex(), '-osdisk')]",
+                    "createOption": "FromImage",
+                    "managedDisk" : { "storageAccountType" : "Standard_LRS" }
+                }
+              },
+              "networkProfile": {
+                "networkInterfaces": [
+                  {
+                    "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nic-name-jump-lx'), '-0', copyindex()))]"
+                  }
+                ]
+              }
+            }
+        }
+    ]
+}
