@@ -254,8 +254,8 @@
             "apiVersion": "2017-03-30",
             "location": "[resourceGroup().location]",
             "tags": {
-              "lifecycle" : "prod-cde",
-              "dataclassification" : "dc3",
+              "lifecycle" : "prod-ncde",
+              "dataclassification" : "dc2",
               "company" : "globalpay",
               "costcenter" : "24039",
               "country" : "united_states",
@@ -279,7 +279,14 @@
             "apiVersion": "[variables('storageApiVersion')]",
             "location": "[variables('location')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             }
         },
         {
@@ -288,7 +295,14 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "idleTimeoutInMinutes": 30,
@@ -304,7 +318,14 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "idleTimeoutInMinutes": 30,
@@ -321,7 +342,14 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "securityRules": [
@@ -446,7 +474,14 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "enableIPForwarding": false,
@@ -480,7 +515,14 @@
             "location": "[variables('location')]",
             "plan": "[variables('plan')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "availabilitySet": {
@@ -538,7 +580,14 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "enableIPForwarding": false,
@@ -572,7 +621,14 @@
             "location": "[variables('location')]",
             "plan": "[variables('plan')]",
             "tags": {
-                "provider": "[toUpper(parameters('Check_PointTags').provider)]"
+                "provider": "[toUpper(parameters('Check_PointTags').provider)]",
+                "lifecycle" : "prod-ncde",
+                "dataclassification" : "dc3",
+                "company" : "globalpay",
+                "costcenter" : "24039",
+                "country" : "united_states",
+                "organization" : "bts",
+                "department" : "infrastructure"
             },
             "properties": {
                 "availabilitySet": {
